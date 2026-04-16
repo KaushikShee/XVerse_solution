@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   title: "XVerse Solutions | Modern Software Development Agency",
   description: "XVerse Solutions is a forward-thinking software development agency crafting exceptional digital products. Web development, mobile apps, UI/UX design, and cloud solutions.",
   keywords: "software development, web development, mobile apps, react, next.js, agency, XVerse Solutions",
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
+  },
   openGraph: {
     title: "XVerse Solutions | Modern Software Development Agency",
     description: "Crafting exceptional digital experiences. Web development, mobile apps, UI/UX design, and cloud solutions.",
