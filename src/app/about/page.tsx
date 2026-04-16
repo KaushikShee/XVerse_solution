@@ -66,7 +66,7 @@ export default async function AboutPage() {
         </section>
 
         {/* Team Section */}
-        <section className="wa-section wa-section-lighter" id="team-section">
+        <section className="wa-section wa-section-lighter" id="team-section" style={{ display: 'none' }}>
           <div className="wa-container">
             <RevealOnScroll>
               <div className="wa-section-header">
