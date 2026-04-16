@@ -30,7 +30,6 @@ export default async function PortfolioPage() {
           <div className="wa-container">
             <div className="wa-projects-grid">
               {projects.sort((a, b) => a.order - b.order).map((project, index) => {
-                const initials = project.title.substring(0, 2).toUpperCase();
                 return (
                   <RevealOnScroll key={project.id} delay={Math.min(index + 1, 4)}>
                     <div className="wa-project-card">
@@ -42,7 +41,6 @@ export default async function PortfolioPage() {
                       >
                         <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
                           <rect x="20" y="30" width="80" height="60" rx="8" stroke={project.iconColor} strokeWidth="2"/>
-                          <text x="60" y="68" textAnchor="middle" fill={project.iconColor} fontSize="20" fontWeight="bold">{initials}</text>
                         </svg>
                       </div>
                       <div className="wa-project-overlay">
