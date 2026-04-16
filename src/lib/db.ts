@@ -487,23 +487,29 @@ function localWrite(data: Database): void {
 
 // Cached blob URL to avoid repeated list() calls within same request
 let cachedBlobUrl: string | null = null;
+const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || '';
 
 async function blobRead(): Promise<Database> {
   try {
     // Try cached URL first (same request optimization)
     if (cachedBlobUrl) {
-      const res = await fetch(cachedBlobUrl, { cache: 'no-store' });
+      const res = await fetch(cachedBlobUrl, {
+        cache: 'no-store',
+        headers: { Authorization: `Bearer ${BLOB_TOKEN}` },
+      });
       if (res.ok) {
         return await res.json() as Database;
       }
-      // URL might be stale, clear and fall through
       cachedBlobUrl = null;
     }
 
     const { blobs } = await list({ prefix: BLOB_FILENAME });
     if (blobs.length > 0) {
       cachedBlobUrl = blobs[0].url;
-      const res = await fetch(blobs[0].url, { cache: 'no-store' });
+      const res = await fetch(blobs[0].url, {
+        cache: 'no-store',
+        headers: { Authorization: `Bearer ${BLOB_TOKEN}` },
+      });
       if (res.ok) {
         return await res.json() as Database;
       }
@@ -516,16 +522,17 @@ async function blobRead(): Promise<Database> {
 
 async function blobWrite(data: Database): Promise<void> {
   try {
-    // Overwrite directly — put with addRandomSuffix:false replaces existing
+    // For private stores: omit 'access' (type assertion needed as TS requires it)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const blob = await put(BLOB_FILENAME, JSON.stringify(data), {
-      access: 'public',
       addRandomSuffix: false,
-    });
+      token: BLOB_TOKEN,
+    } as any);
     cachedBlobUrl = blob.url;
     console.log('Blob write success:', blob.url);
   } catch (e) {
     console.error('Blob write failed:', e);
-    throw e; // Propagate error so callers know write failed
+    throw e;
   }
 }
 
