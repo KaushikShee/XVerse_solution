@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { readDb, writeDb, generateId } from '@/lib/db';
+import { readDbAsync, writeDbAsync, generateId } from '@/lib/db';
 import { isAuthenticated } from '@/lib/auth';
 
 export async function GET() {
   try {
-    const db = readDb();
+    const db = await readDbAsync();
     return NextResponse.json(db.testimonials.sort((a, b) => a.order - b.order));
   } catch (error) {
     console.error('Error:', error);
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   try {
     if (!(await isAuthenticated())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     const body = await request.json();
-    const db = readDb();
+    const db = await readDbAsync();
     const testimonial = {
       id: generateId(),
       clientName: body.clientName || '',
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       updatedAt: new Date().toISOString(),
     };
     db.testimonials.push(testimonial);
-    writeDb(db);
+    await writeDbAsync(db);
     return NextResponse.json(testimonial, { status: 201 });
   } catch (error) {
     console.error('Error:', error);
@@ -44,11 +44,11 @@ export async function PUT(request: Request) {
   try {
     if (!(await isAuthenticated())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     const body = await request.json();
-    const db = readDb();
+    const db = await readDbAsync();
     const index = db.testimonials.findIndex(t => t.id === body.id);
     if (index === -1) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     db.testimonials[index] = { ...db.testimonials[index], ...body, updatedAt: new Date().toISOString() };
-    writeDb(db);
+    await writeDbAsync(db);
     return NextResponse.json(db.testimonials[index]);
   } catch (error) {
     console.error('Error:', error);
@@ -62,9 +62,9 @@ export async function DELETE(request: Request) {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
-    const db = readDb();
+    const db = await readDbAsync();
     db.testimonials = db.testimonials.filter(t => t.id !== id);
-    writeDb(db);
+    await writeDbAsync(db);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error:', error);

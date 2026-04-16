@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { readDb, writeDb, generateId } from '@/lib/db';
+import { readDbAsync, writeDbAsync, generateId } from '@/lib/db';
 import { isAuthenticated } from '@/lib/auth';
 
 export async function GET() {
   try {
-    const db = readDb();
+    const db = await readDbAsync();
     return NextResponse.json(db.services.sort((a, b) => a.order - b.order));
   } catch (error) {
     console.error('Error fetching services:', error);
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const db = readDb();
+    const db = await readDbAsync();
     
     const service = {
       id: generateId(),
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     };
 
     db.services.push(service);
-    writeDb(db);
+    await writeDbAsync(db);
 
     return NextResponse.json(service, { status: 201 });
   } catch (error) {
@@ -48,7 +48,7 @@ export async function PUT(request: Request) {
     }
 
     const body = await request.json();
-    const db = readDb();
+    const db = await readDbAsync();
     const index = db.services.findIndex(s => s.id === body.id);
     
     if (index === -1) {
@@ -60,7 +60,7 @@ export async function PUT(request: Request) {
       ...body,
       updatedAt: new Date().toISOString(),
     };
-    writeDb(db);
+    await writeDbAsync(db);
 
     return NextResponse.json(db.services[index]);
   } catch (error) {
@@ -82,9 +82,9 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: 'ID required' }, { status: 400 });
     }
 
-    const db = readDb();
+    const db = await readDbAsync();
     db.services = db.services.filter(s => s.id !== id);
-    writeDb(db);
+    await writeDbAsync(db);
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
-import { readDb, writeDb, generateId, type AdminUser } from './db';
+import { readDbAsync, writeDbAsync, generateId, type AdminUser } from './db';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'xverse-super-secret-key-2024';
 const TOKEN_NAME = 'xverse_admin_token';
@@ -39,7 +39,7 @@ export async function getCurrentUser(): Promise<AdminUser | null> {
   const decoded = verifyToken(token);
   if (!decoded) return null;
 
-  const db = readDb();
+  const db = await readDbAsync();
   return db.users.find(u => u.id === decoded.userId) || null;
 }
 
@@ -49,7 +49,7 @@ export async function isAuthenticated(): Promise<boolean> {
 }
 
 export async function ensureAdminExists(): Promise<void> {
-  const db = readDb();
+  const db = await readDbAsync();
   if (db.users.length === 0) {
     const email = process.env.ADMIN_EMAIL || 'admin@xverse.com';
     const password = process.env.ADMIN_PASSWORD || 'admin123';
@@ -63,6 +63,6 @@ export async function ensureAdminExists(): Promise<void> {
       role: 'admin',
       createdAt: new Date().toISOString(),
     });
-    writeDb(db);
+    await writeDbAsync(db);
   }
 }

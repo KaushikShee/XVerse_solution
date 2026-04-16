@@ -1,4 +1,4 @@
-import { readDb } from '@/lib/db';
+import { readDbAsync } from '@/lib/db';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { notFound } from 'next/navigation';
@@ -13,7 +13,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const db = readDb();
+  const db = await readDbAsync();
   const post = db.blogPosts.find(p => p.slug === slug);
   return {
     title: post ? `${post.title} | XVerse Solutions Blog` : 'Post Not Found',
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const db = readDb();
+  const db = await readDbAsync();
   const post = db.blogPosts.find(p => p.slug === slug && p.status === 'published');
 
   if (!post) {

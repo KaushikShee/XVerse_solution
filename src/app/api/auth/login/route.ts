@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { readDb } from '@/lib/db';
+import { readDbAsync } from '@/lib/db';
 import { verifyPassword, generateToken, ensureAdminExists } from '@/lib/auth';
 
 export async function POST(request: Request) {
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email and password required' }, { status: 400 });
     }
 
-    const db = readDb();
+    const db = await readDbAsync();
     const user = db.users.find(u => u.email === email);
 
     if (!user) {

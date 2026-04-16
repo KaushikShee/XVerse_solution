@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { readDb, writeDb, generateId } from '@/lib/db';
+import { readDbAsync, writeDbAsync, generateId } from '@/lib/db';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const db = readDb();
+    const db = await readDbAsync();
     const submission = {
       id: generateId(),
       name: body.name || '',
@@ -15,7 +15,7 @@ export async function POST(request: Request) {
       read: false,
     };
     db.contactSubmissions.push(submission);
-    writeDb(db);
+    await writeDbAsync(db);
     return NextResponse.json({ success: true, message: 'Thank you! Your message has been sent.' }, { status: 201 });
   } catch (error) {
     console.error('Error:', error);
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    const db = readDb();
+    const db = await readDbAsync();
     return NextResponse.json(db.contactSubmissions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
   } catch (error) {
     console.error('Error:', error);

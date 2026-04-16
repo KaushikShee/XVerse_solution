@@ -1,4 +1,4 @@
-import { readDb } from '@/lib/db';
+import { readDbAsync } from '@/lib/db';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import RevealOnScroll from '@/components/RevealOnScroll';
@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic';
 
-export default function ServicesPage() {
-  const db = readDb();
+export default async function ServicesPage() {
+  const db = await readDbAsync();
   const { homepageContent, services } = db;
 
   return (

@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { readDb, writeDb, generateId } from '@/lib/db';
+import { readDbAsync, writeDbAsync, generateId } from '@/lib/db';
 import { isAuthenticated } from '@/lib/auth';
 
 export async function GET() {
   try {
-    const db = readDb();
+    const db = await readDbAsync();
     return NextResponse.json(db.projects.sort((a, b) => a.order - b.order));
   } catch (error) {
     console.error('Error fetching projects:', error);
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     const body = await request.json();
-    const db = readDb();
+    const db = await readDbAsync();
     const project = {
       id: generateId(),
       title: body.title || '',
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
       updatedAt: new Date().toISOString(),
     };
     db.projects.push(project);
-    writeDb(db);
+    await writeDbAsync(db);
     return NextResponse.json(project, { status: 201 });
   } catch (error) {
     console.error('Error creating project:', error);
@@ -48,11 +48,11 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     const body = await request.json();
-    const db = readDb();
+    const db = await readDbAsync();
     const index = db.projects.findIndex(p => p.id === body.id);
     if (index === -1) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     db.projects[index] = { ...db.projects[index], ...body, updatedAt: new Date().toISOString() };
-    writeDb(db);
+    await writeDbAsync(db);
     return NextResponse.json(db.projects[index]);
   } catch (error) {
     console.error('Error updating project:', error);
@@ -68,9 +68,9 @@ export async function DELETE(request: Request) {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
-    const db = readDb();
+    const db = await readDbAsync();
     db.projects = db.projects.filter(p => p.id !== id);
-    writeDb(db);
+    await writeDbAsync(db);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting project:', error);

@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { readDb, writeDb, generateId } from '@/lib/db';
+import { readDbAsync, writeDbAsync, generateId } from '@/lib/db';
 import { isAuthenticated } from '@/lib/auth';
 
 export async function GET() {
   try {
-    const db = readDb();
-    return NextResponse.json(db.blogPosts.filter(p => p.status === 'published').sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+    const db = await readDbAsync();
+    return NextResponse.json(db.blogPosts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json({ error: 'Failed to fetch' }, { status: 500 });
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   try {
     if (!(await isAuthenticated())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     const body = await request.json();
-    const db = readDb();
+    const db = await readDbAsync();
     const post = {
       id: generateId(),
       title: body.title || '',
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       updatedAt: new Date().toISOString(),
     };
     db.blogPosts.push(post);
-    writeDb(db);
+    await writeDbAsync(db);
     return NextResponse.json(post, { status: 201 });
   } catch (error) {
     console.error('Error:', error);
@@ -41,11 +41,11 @@ export async function PUT(request: Request) {
   try {
     if (!(await isAuthenticated())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     const body = await request.json();
-    const db = readDb();
+    const db = await readDbAsync();
     const index = db.blogPosts.findIndex(p => p.id === body.id);
     if (index === -1) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     db.blogPosts[index] = { ...db.blogPosts[index], ...body, updatedAt: new Date().toISOString() };
-    writeDb(db);
+    await writeDbAsync(db);
     return NextResponse.json(db.blogPosts[index]);
   } catch (error) {
     console.error('Error:', error);
@@ -59,9 +59,9 @@ export async function DELETE(request: Request) {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
-    const db = readDb();
+    const db = await readDbAsync();
     db.blogPosts = db.blogPosts.filter(p => p.id !== id);
-    writeDb(db);
+    await writeDbAsync(db);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error:', error);

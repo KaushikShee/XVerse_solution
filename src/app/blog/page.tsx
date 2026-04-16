@@ -1,4 +1,4 @@
-import { readDb } from '@/lib/db';
+import { readDbAsync } from '@/lib/db';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import RevealOnScroll from '@/components/RevealOnScroll';
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic';
 
-export default function BlogPage() {
-  const db = readDb();
+export default async function BlogPage() {
+  const db = await readDbAsync();
   const { homepageContent, blogPosts } = db;
   const published = blogPosts.filter(p => p.status === 'published').sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 

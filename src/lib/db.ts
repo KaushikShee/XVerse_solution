@@ -1,7 +1,13 @@
 import fs from 'fs';
 import path from 'path';
+import { put, list, del } from '@vercel/blob';
 
 const DB_PATH = path.join(process.cwd(), 'data', 'db.json');
+const BLOB_FILENAME = 'xverse-db.json';
+
+// =============================================
+// Type Definitions
+// =============================================
 
 export interface Service {
   id: string;
@@ -151,6 +157,10 @@ export interface Database {
   blogPosts: BlogPost[];
   contactSubmissions: ContactSubmission[];
 }
+
+// =============================================
+// Default Seed Data
+// =============================================
 
 function getDefaultData(): Database {
   return {
@@ -442,68 +452,127 @@ function getDefaultData(): Database {
   };
 }
 
-// In-memory cache for serverless environments (Vercel)
-let memoryDb: Database | null = null;
+// =============================================
+// Storage Layer
+// =============================================
 
-function isWritableFs(): boolean {
+const IS_VERCEL = !!process.env.BLOB_READ_WRITE_TOKEN;
+
+// --- Local File System (Development) ---
+
+function localRead(): Database {
   try {
     const dir = path.dirname(DB_PATH);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    // Test write
-    const testPath = path.join(dir, '.write-test');
-    fs.writeFileSync(testPath, 'test');
-    fs.unlinkSync(testPath);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function ensureDbExists(): void {
-  if (isWritableFs()) {
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     if (!fs.existsSync(DB_PATH)) {
       fs.writeFileSync(DB_PATH, JSON.stringify(getDefaultData(), null, 2));
     }
+    return JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
+  } catch {
+    return getDefaultData();
   }
 }
 
+function localWrite(data: Database): void {
+  try {
+    const dir = path.dirname(DB_PATH);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+  } catch (e) {
+    console.error('Local write failed:', e);
+  }
+}
+
+// --- Vercel Blob (Production) ---
+
+async function blobRead(): Promise<Database> {
+  try {
+    const { blobs } = await list({ prefix: BLOB_FILENAME });
+    if (blobs.length > 0) {
+      const res = await fetch(blobs[0].url);
+      if (res.ok) {
+        return await res.json() as Database;
+      }
+    }
+  } catch (e) {
+    console.error('Blob read failed:', e);
+  }
+  return getDefaultData();
+}
+
+async function blobWrite(data: Database): Promise<void> {
+  try {
+    // Delete old blobs with this name
+    const { blobs } = await list({ prefix: BLOB_FILENAME });
+    for (const blob of blobs) {
+      await del(blob.url);
+    }
+    // Write new blob
+    await put(BLOB_FILENAME, JSON.stringify(data), {
+      access: 'public',
+      addRandomSuffix: false,
+    });
+  } catch (e) {
+    console.error('Blob write failed:', e);
+  }
+}
+
+// =============================================
+// Public API (Sync for local, Async for blob)
+// =============================================
+
+/**
+ * Read database — works synchronously for local dev,
+ * uses cached data + async refresh for Vercel.
+ */
 export function readDb(): Database {
-  // Try file system first (local dev)
-  try {
-    ensureDbExists();
-    if (fs.existsSync(DB_PATH)) {
-      const raw = fs.readFileSync(DB_PATH, 'utf-8');
-      return JSON.parse(raw);
-    }
-  } catch {
-    // Fall through to memory/default
+  if (!IS_VERCEL) {
+    return localRead();
   }
-
-  // Use in-memory cache (Vercel serverless)
-  if (memoryDb) return memoryDb;
-
-  // Return default data
-  memoryDb = getDefaultData();
-  return memoryDb;
+  // On Vercel: return cache or default (async read happens via readDbAsync)
+  return cachedDb || getDefaultData();
 }
 
+/**
+ * Async read — always fetches the latest from Vercel Blob.
+ * Call this in API routes for the freshest data.
+ */
+export async function readDbAsync(): Promise<Database> {
+  if (!IS_VERCEL) {
+    return localRead();
+  }
+  const data = await blobRead();
+  cachedDb = data;
+  return data;
+}
+
+/**
+ * Write database — sync for local, async for Vercel Blob.
+ */
 export function writeDb(data: Database): void {
-  // Try file system first (local dev)
-  try {
-    if (isWritableFs()) {
-      ensureDbExists();
-      fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
-      return;
-    }
-  } catch {
-    // Fall through to memory
+  if (!IS_VERCEL) {
+    localWrite(data);
+    return;
   }
-
-  // Use in-memory cache (Vercel serverless)
-  memoryDb = data;
+  // On Vercel: update cache immediately + async write to blob
+  cachedDb = data;
+  blobWrite(data).catch(e => console.error('Async blob write failed:', e));
 }
+
+/**
+ * Async write — use this in API routes to ensure data is persisted.
+ */
+export async function writeDbAsync(data: Database): Promise<void> {
+  if (!IS_VERCEL) {
+    localWrite(data);
+    return;
+  }
+  cachedDb = data;
+  await blobWrite(data);
+}
+
+// In-memory cache for Vercel
+let cachedDb: Database | null = null;
 
 export function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
