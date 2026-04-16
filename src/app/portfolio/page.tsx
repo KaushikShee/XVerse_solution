@@ -39,9 +39,6 @@ export default async function PortfolioPage() {
                           background: `linear-gradient(135deg, ${project.bgColor1} 0%, ${project.bgColor2} 100%)`,
                         }}
                       >
-                        <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
-                          <rect x="20" y="30" width="80" height="60" rx="8" stroke={project.iconColor} strokeWidth="2"/>
-                        </svg>
                       </div>
                       <div className="wa-project-overlay">
                         <p className="wa-project-category">{project.category}</p>
