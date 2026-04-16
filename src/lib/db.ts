@@ -522,9 +522,8 @@ async function blobRead(): Promise<Database> {
 
 async function blobWrite(data: Database): Promise<void> {
   try {
-    // For private stores: omit 'access' (type assertion needed as TS requires it)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const blob = await put(BLOB_FILENAME, JSON.stringify(data), {
+      access: 'private',
       addRandomSuffix: false,
       token: BLOB_TOKEN,
     } as any);

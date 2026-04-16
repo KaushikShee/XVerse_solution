@@ -15,8 +15,8 @@ export async function GET() {
   // Test blob write
   try {
     const testData = JSON.stringify({ test: true, time: Date.now() });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const blob = await put('xverse-test.json', testData, {
+      access: 'private',
       addRandomSuffix: false,
     } as any);
     results.blobWrite = { status: '✅ SUCCESS', url: blob.url };
