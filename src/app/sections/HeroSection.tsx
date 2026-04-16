@@ -30,7 +30,7 @@ export default function HeroSection({ content }: Props) {
 
       <div className="wa-hero-content">
         {/* Badge */}
-        <p className="wa-hero-badge">{content.heroBadge}</p>
+        <p className="wa-hero-badge" style={{ display: 'none' }}>{content.heroBadge}</p>
 
         {/* Title */}
         <h1 className="wa-hero-title">
