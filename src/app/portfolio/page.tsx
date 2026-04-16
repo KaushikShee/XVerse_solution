@@ -5,8 +5,17 @@ import RevealOnScroll from '@/components/RevealOnScroll';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Portfolio | XVerse Solutions',
+  title: 'Portfolio',
   description: 'Explore our portfolio of exceptional digital products — fintech, healthcare, e-commerce, and travel applications.',
+  openGraph: {
+    title: 'Portfolio | XVerse Solutions',
+    description: 'Explore our portfolio of exceptional digital products — fintech, healthcare, e-commerce, and travel applications.',
+    url: '/portfolio',
+  },
+  twitter: {
+    title: 'Portfolio | XVerse Solutions',
+    description: 'Explore our portfolio of exceptional digital products — fintech, healthcare, e-commerce, and travel applications.',
+  },
 };
 
 export const dynamic = 'force-dynamic';

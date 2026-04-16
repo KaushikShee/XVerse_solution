@@ -6,8 +6,17 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Blog | XVerse Solutions',
+  title: 'Blog',
   description: 'Read the latest insights on software development, technology trends, and digital innovation from XVerse Solutions.',
+  openGraph: {
+    title: 'Blog | XVerse Solutions',
+    description: 'Latest insights on software development, technology trends, and digital innovation.',
+    url: '/blog',
+  },
+  twitter: {
+    title: 'Blog | XVerse Solutions',
+    description: 'Latest insights on software development, technology trends, and digital innovation.',
+  },
 };
 
 export const dynamic = 'force-dynamic';

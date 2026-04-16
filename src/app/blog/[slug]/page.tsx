@@ -15,9 +15,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const db = await readDbAsync();
   const post = db.blogPosts.find(p => p.slug === slug);
+  if (!post) return { title: 'Post Not Found' };
   return {
-    title: post ? `${post.title} | XVerse Solutions Blog` : 'Post Not Found',
-    description: post?.excerpt || '',
+    title: post.title,
+    description: post.excerpt || '',
+    authors: [{ name: post.author }],
+    openGraph: {
+      title: post.title,
+      description: post.excerpt || '',
+      type: 'article',
+      url: `/blog/${slug}`,
+      publishedTime: post.createdAt,
+      modifiedTime: post.updatedAt,
+      authors: [post.author],
+      section: 'Technology',
+    },
+    twitter: {
+      title: post.title,
+      description: post.excerpt || '',
+    },
   };
 }
 
@@ -30,8 +46,29 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xverse.solutions';
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.excerpt,
+    author: { '@type': 'Person', name: post.author },
+    publisher: {
+      '@type': 'Organization',
+      name: 'XVerse Solutions',
+      logo: { '@type': 'ImageObject', url: `${siteUrl}/icon.png` },
+    },
+    datePublished: post.createdAt,
+    dateModified: post.updatedAt,
+    url: `${siteUrl}/blog/${post.slug}`,
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <Header companyName={db.homepageContent.companyName} />
       <main>
         <section className="wa-page-banner" style={{ paddingBottom: '3rem' }}>

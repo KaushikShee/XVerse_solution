@@ -19,8 +19,17 @@ function ServiceIcon({ title }: { title: string }) {
 }
 
 export const metadata: Metadata = {
-  title: 'Services | XVerse Solutions',
+  title: 'Services',
   description: 'Explore our comprehensive software development services — web development, mobile apps, UI/UX design, cloud solutions, eCommerce, and AI/ML.',
+  openGraph: {
+    title: 'Services | XVerse Solutions',
+    description: 'Web development, mobile apps, UI/UX design, cloud solutions, eCommerce, and AI/ML services.',
+    url: '/services',
+  },
+  twitter: {
+    title: 'Services | XVerse Solutions',
+    description: 'Web development, mobile apps, UI/UX design, cloud solutions, eCommerce, and AI/ML services.',
+  },
 };
 
 export const dynamic = 'force-dynamic';

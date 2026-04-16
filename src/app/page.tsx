@@ -10,8 +10,19 @@ import CTASection from './sections/CTASection';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'XVerse Solutions | Modern Software Development Agency',
+  title: {
+    absolute: 'XVerse Solutions | Modern Software Development Agency',
+  },
   description: 'XVerse Solutions builds exceptional digital products. Web development, mobile apps, UI/UX design, cloud solutions, and eCommerce development.',
+  openGraph: {
+    title: 'XVerse Solutions | Modern Software Development Agency',
+    description: 'XVerse Solutions builds exceptional digital products. Web development, mobile apps, UI/UX design, cloud solutions, and eCommerce development.',
+    url: '/',
+  },
+  twitter: {
+    title: 'XVerse Solutions | Modern Software Development Agency',
+    description: 'XVerse Solutions builds exceptional digital products. Web development, mobile apps, UI/UX design, cloud solutions, and eCommerce development.',
+  },
 };
 
 export const dynamic = 'force-dynamic';

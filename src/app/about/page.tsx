@@ -6,8 +6,17 @@ import { Target, Telescope } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About Us | XVerse Solutions',
+  title: 'About Us',
   description: 'Learn about XVerse Solutions — our mission, vision, and the talented team behind our exceptional digital products.',
+  openGraph: {
+    title: 'About XVerse Solutions',
+    description: 'Learn about XVerse Solutions — our mission, vision, and the talented team behind our exceptional digital products.',
+    url: '/about',
+  },
+  twitter: {
+    title: 'About XVerse Solutions',
+    description: 'Learn about XVerse Solutions — our mission, vision, and the talented team behind our exceptional digital products.',
+  },
 };
 
 export const dynamic = 'force-dynamic';
