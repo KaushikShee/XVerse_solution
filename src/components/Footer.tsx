@@ -12,7 +12,7 @@ export default function Footer({ content }: FooterProps) {
     companyEmail: content?.companyEmail || 'hello@xverse.solutions',
     companyPhone: content?.companyPhone || '+1 (555) 123-4567',
     companyAddress: content?.companyAddress || 'San Francisco, CA',
-    copyrightText: content?.copyrightText || '© 2026 XVerse Solutions. All rights reserved.',
+    copyrightText: (content?.copyrightText || '© 2026 XVerse Solutions. All rights reserved.').replace(/\b20\d{2}\b/, '2026'),
     socialLinkedin: content?.socialLinkedin || '#',
     socialGithub: content?.socialGithub || '#',
     socialTwitter: content?.socialTwitter || '#',
