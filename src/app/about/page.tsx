@@ -2,6 +2,7 @@ import { readDbAsync } from '@/lib/db';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import RevealOnScroll from '@/components/RevealOnScroll';
+import { Target, Telescope } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -43,8 +44,8 @@ export default async function AboutPage() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
                 <RevealOnScroll delay={1}>
                   <div className="admin-card" style={{ padding: '2.5rem', height: '100%' }}>
-                    <div style={{ width: 50, height: 50, background: 'var(--wa-gradient-primary)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', fontSize: '1.5rem' }}>
-                      🎯
+                    <div style={{ width: 50, height: 50, background: 'var(--wa-gradient-primary)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', color: 'white' }}>
+                      <Target size={26} strokeWidth={1.5} />
                     </div>
                     <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Our Mission</h3>
                     <p style={{ lineHeight: 1.7 }}>{homepageContent.aboutMission}</p>
@@ -53,8 +54,8 @@ export default async function AboutPage() {
 
                 <RevealOnScroll delay={2}>
                   <div className="admin-card" style={{ padding: '2.5rem', height: '100%' }}>
-                    <div style={{ width: 50, height: 50, background: 'var(--wa-gradient-primary)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', fontSize: '1.5rem' }}>
-                      🔭
+                    <div style={{ width: 50, height: 50, background: 'var(--wa-gradient-primary)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', color: 'white' }}>
+                      <Telescope size={26} strokeWidth={1.5} />
                     </div>
                     <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Our Vision</h3>
                     <p style={{ lineHeight: 1.7 }}>{homepageContent.aboutVision}</p>

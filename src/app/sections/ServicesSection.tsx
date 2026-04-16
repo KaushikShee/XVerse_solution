@@ -7,21 +7,17 @@ interface Props {
   services: Service[];
 }
 
-const iconMap: Record<string, React.ReactNode> = {
-  '💻': <Monitor size={28} strokeWidth={1.5} />,
-  '📱': <Smartphone size={28} strokeWidth={1.5} />,
-  '🎨': <Palette size={28} strokeWidth={1.5} />,
-  '☁️': <Cloud size={28} strokeWidth={1.5} />,
-  '🛒': <ShoppingCart size={28} strokeWidth={1.5} />,
-  '🤖': <Bot size={28} strokeWidth={1.5} />,
-  '💡': <Cpu size={28} strokeWidth={1.5} />,
-  '🌐': <Globe size={28} strokeWidth={1.5} />,
-  '📊': <LayoutDashboard size={28} strokeWidth={1.5} />,
-  '⚙️': <Code2 size={28} strokeWidth={1.5} />,
+const titleIconMap: Record<string, React.ReactNode> = {
+  'web development':       <Monitor size={28} strokeWidth={1.5} />,
+  'mobile apps':           <Smartphone size={28} strokeWidth={1.5} />,
+  'ui/ux design':          <Palette size={28} strokeWidth={1.5} />,
+  'cloud solutions':       <Cloud size={28} strokeWidth={1.5} />,
+  'ecommerce development': <ShoppingCart size={28} strokeWidth={1.5} />,
+  'ai/ml solutions':       <Bot size={28} strokeWidth={1.5} />,
 };
 
-function ServiceIcon({ icon }: { icon: string }) {
-  return iconMap[icon.trim()] ?? <Code2 size={28} strokeWidth={1.5} />;
+function ServiceIcon({ title }: { title: string }) {
+  return titleIconMap[title.toLowerCase()] ?? <Code2 size={28} strokeWidth={1.5} />;
 }
 
 export default function ServicesSection({ content, services }: Props) {
@@ -43,7 +39,7 @@ export default function ServicesSection({ content, services }: Props) {
           {services.sort((a, b) => a.order - b.order).map((service, index) => (
             <RevealOnScroll key={service.id} delay={Math.min(index + 1, 6)}>
               <div className="wa-service-card">
-                <div className="wa-service-icon"><ServiceIcon icon={service.icon} /></div>
+                <div className="wa-service-icon"><ServiceIcon title={service.title} /></div>
                 <h3 className="wa-service-title">{service.title}</h3>
                 <p className="wa-service-description">{service.description}</p>
               </div>
