@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 interface HeaderProps {
@@ -43,12 +44,7 @@ export default function Header({ companyName = 'XVerse Solutions' }: HeaderProps
       <header className={`wa-header ${scrolled ? 'scrolled' : ''}`} id="main-header">
         <div className="wa-nav-container">
           <Link href="/" className="wa-nav-brand">
-            <div className="wa-logo-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 5L19 19" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
-                <path d="M19 5L5 19" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeOpacity="0.85"/>
-              </svg>
-            </div>
+            <Image src="/icon.png" alt="XVerse" width={36} height={36} className="wa-logo-img" style={{ borderRadius: 8 }} />
             <span className="wa-site-title">{companyName}</span>
           </Link>
 
@@ -85,12 +81,7 @@ export default function Header({ companyName = 'XVerse Solutions' }: HeaderProps
       <div className={`wa-mobile-menu ${mobileOpen ? 'is-open' : ''}`}>
         <div className="wa-mobile-header">
           <div className="wa-nav-brand" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <div className="wa-logo-icon" style={{ width: 36, height: 36, background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 5L19 19" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
-                <path d="M19 5L5 19" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeOpacity="0.85"/>
-              </svg>
-            </div>
+            <Image src="/icon.png" alt="XVerse" width={36} height={36} style={{ borderRadius: 8 }} />
             <span style={{ fontWeight: 700, color: '#f8fafc' }}>{companyName}</span>
           </div>
           <button
