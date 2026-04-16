@@ -50,19 +50,23 @@ export async function isAuthenticated(): Promise<boolean> {
 
 export async function ensureAdminExists(): Promise<void> {
   const db = await readDbAsync();
-  if (db.users.length === 0) {
-    const email = process.env.ADMIN_EMAIL || 'admin@xverse.com';
-    const password = process.env.ADMIN_PASSWORD || 'admin123';
-    const passwordHash = await hashPassword(password);
+  const email = process.env.ADMIN_EMAIL || 'admin@xverse.com';
+  const password = process.env.ADMIN_PASSWORD || 'admin123';
 
-    db.users.push({
+  // Check if admin with matching email exists
+  const existingAdmin = db.users.find(u => u.email === email);
+
+  if (!existingAdmin) {
+    // Remove any stale admin users and create fresh one with current env credentials
+    const passwordHash = await hashPassword(password);
+    db.users = [{
       id: generateId(),
       email,
       passwordHash,
       name: 'Admin',
       role: 'admin',
       createdAt: new Date().toISOString(),
-    });
+    }];
     await writeDbAsync(db);
   }
 }

@@ -534,12 +534,17 @@ export function readDb(): Database {
 }
 
 /**
- * Async read — always fetches the latest from Vercel Blob.
- * Call this in API routes for the freshest data.
+ * Async read — checks in-memory cache first (for within-request consistency),
+ * then fetches from Vercel Blob if cache is empty.
  */
 export async function readDbAsync(): Promise<Database> {
   if (!IS_VERCEL) {
     return localRead();
+  }
+  // Use cache if available (critical for within-request consistency,
+  // e.g. ensureAdminExists writes, then login reads)
+  if (cachedDb) {
+    return cachedDb;
   }
   const data = await blobRead();
   cachedDb = data;
