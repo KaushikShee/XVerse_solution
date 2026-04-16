@@ -43,18 +43,7 @@ export default function Header({ companyName = 'XVerse Solutions' }: HeaderProps
       <header className={`wa-header ${scrolled ? 'scrolled' : ''}`} id="main-header">
         <div className="wa-nav-container">
           <Link href="/" className="wa-nav-brand">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ borderRadius: 8, flexShrink: 0 }}>
-              <defs>
-                <linearGradient id="hdr-bg" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#4f46e5"/>
-                  <stop offset="0.5" stopColor="#7c3aed"/>
-                  <stop offset="1" stopColor="#9333ea"/>
-                </linearGradient>
-              </defs>
-              <rect width="36" height="36" rx="8" fill="url(#hdr-bg)"/>
-              <path d="M10.5 10L18 18.5L10.5 27" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.9"/>
-              <path d="M25.5 10L18 18.5L25.5 27" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <img src="/xverse-logo.png" alt="XVerse Logo" width={40} height={40} style={{ objectFit: 'contain', flexShrink: 0 }} />
             <span className="wa-site-title">{companyName}</span>
           </Link>
 
@@ -91,18 +80,7 @@ export default function Header({ companyName = 'XVerse Solutions' }: HeaderProps
       <div className={`wa-mobile-menu ${mobileOpen ? 'is-open' : ''}`}>
         <div className="wa-mobile-header">
           <div className="wa-nav-brand" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ borderRadius: 8, flexShrink: 0 }}>
-              <defs>
-                <linearGradient id="mob-bg" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#4f46e5"/>
-                  <stop offset="0.5" stopColor="#7c3aed"/>
-                  <stop offset="1" stopColor="#9333ea"/>
-                </linearGradient>
-              </defs>
-              <rect width="36" height="36" rx="8" fill="url(#mob-bg)"/>
-              <path d="M10.5 10L18 18.5L10.5 27" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.9"/>
-              <path d="M25.5 10L18 18.5L25.5 27" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <img src="/xverse-logo.png" alt="XVerse Logo" width={40} height={40} style={{ objectFit: 'contain', flexShrink: 0 }} />
             <span style={{ fontWeight: 700, color: '#f8fafc' }}>{companyName}</span>
           </div>
           <button
