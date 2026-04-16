@@ -2,6 +2,7 @@ import { readDbAsync } from '@/lib/db';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import RevealOnScroll from '@/components/RevealOnScroll';
+import { ExternalLink } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -65,13 +66,17 @@ export default async function PortfolioPage() {
                               marginTop: '1rem',
                               display: 'inline-flex',
                               alignItems: 'center',
-                              gap: '0.5rem',
-                              color: 'var(--wa-accent)',
-                              fontSize: '0.875rem',
+                              gap: '0.4rem',
+                              padding: '0.45rem 1rem',
+                              background: 'var(--wa-gradient-primary)',
+                              color: '#fff',
+                              borderRadius: '6px',
+                              fontSize: '0.8rem',
                               fontWeight: 600,
+                              textDecoration: 'none',
                             }}
                           >
-                            View Live →
+                            <ExternalLink size={13} /> Live Site
                           </a>
                         )}
                       </div>

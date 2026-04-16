@@ -1,5 +1,6 @@
 import RevealOnScroll from '@/components/RevealOnScroll';
 import type { HomepageContent, Project } from '@/lib/db';
+import { ExternalLink } from 'lucide-react';
 
 interface Props {
   content: HomepageContent;
@@ -49,6 +50,28 @@ export default function ProjectsSection({ content, projects }: Props) {
                         <span key={ti} className="wa-project-tag">{tag}</span>
                       ))}
                     </div>
+                    {project.liveLink && project.liveLink !== '#' && (
+                      <a
+                        href={project.liveLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          marginTop: '1rem',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.4rem',
+                          padding: '0.45rem 1rem',
+                          background: 'var(--wa-gradient-primary)',
+                          color: '#fff',
+                          borderRadius: '6px',
+                          fontSize: '0.8rem',
+                          fontWeight: 600,
+                          textDecoration: 'none',
+                        }}
+                      >
+                        <ExternalLink size={13} /> Live Site
+                      </a>
+                    )}
                   </div>
                 </div>
               </RevealOnScroll>
