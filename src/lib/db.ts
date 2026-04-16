@@ -567,13 +567,28 @@ export function writeDb(data: Database): void {
 
 /**
  * Write database - async version. Ensures data is persisted before returning.
+ * Throws if write fails so API routes can return proper error to client.
  */
 export async function writeDbAsync(data: Database): Promise<void> {
-  if (!IS_VERCEL) {
-    localWrite(data);
+  if (IS_VERCEL) {
+    await blobWrite(data);
     return;
   }
-  await blobWrite(data);
+
+  // Local development - write to file
+  try {
+    localWrite(data);
+    // Verify the write succeeded by reading back
+    const verify = JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
+    if (!verify) throw new Error('Write verification failed');
+  } catch (e) {
+    console.error('writeDbAsync failed:', e);
+    console.error('IS_VERCEL:', IS_VERCEL, 'BLOB_READ_WRITE_TOKEN set:', !!process.env.BLOB_READ_WRITE_TOKEN);
+    throw new Error(
+      'Database write failed. ' +
+      (process.env.VERCEL ? 'BLOB_READ_WRITE_TOKEN may not be configured. Go to Vercel Dashboard → Storage → Create Blob Store.' : String(e))
+    );
+  }
 }
 
 export function generateId(): string {
