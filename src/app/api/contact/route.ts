@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { readDbAsync, writeDbAsync, generateId } from '@/lib/db';
+import { jsonResponse } from '@/lib/api-utils';
 
 export async function POST(request: Request) {
   try {
@@ -16,19 +16,19 @@ export async function POST(request: Request) {
     };
     db.contactSubmissions.push(submission);
     await writeDbAsync(db);
-    return NextResponse.json({ success: true, message: 'Thank you! Your message has been sent.' }, { status: 201 });
+    return jsonResponse({ success: true, message: 'Thank you! Your message has been sent.' }, 201);
   } catch (error) {
     console.error('Error:', error);
-    return NextResponse.json({ error: 'Failed to submit' }, { status: 500 });
+    return jsonResponse({ error: 'Failed to submit' }, 500);
   }
 }
 
 export async function GET() {
   try {
     const db = await readDbAsync();
-    return NextResponse.json(db.contactSubmissions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+    return jsonResponse(db.contactSubmissions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
   } catch (error) {
     console.error('Error:', error);
-    return NextResponse.json({ error: 'Failed to fetch' }, { status: 500 });
+    return jsonResponse({ error: 'Failed to fetch' }, 500);
   }
 }

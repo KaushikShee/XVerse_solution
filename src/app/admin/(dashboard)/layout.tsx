@@ -31,7 +31,7 @@ export default function AdminDashboardLayout({ children }: AdminLayoutProps) {
 
   const checkAuth = async () => {
     try {
-      const res = await fetch('/api/auth/me');
+      const res = await fetch('/api/auth/me', { cache: 'no-store' });
       if (res.ok) {
         setAuthenticated(true);
       } else {

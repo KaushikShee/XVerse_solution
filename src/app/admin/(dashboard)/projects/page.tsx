@@ -16,7 +16,7 @@ export default function AdminProjectsPage() {
 
   useEffect(() => { load(); }, []);
 
-  const load = async () => { const r = await fetch('/api/projects'); setItems(await r.json()); setLoading(false); };
+  const load = async () => { const r = await fetch('/api/projects', { cache: 'no-store' }); setItems(await r.json()); setLoading(false); };
 
   const handleSave = async () => {
     if (!editing) return;

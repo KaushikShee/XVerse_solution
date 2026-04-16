@@ -20,7 +20,7 @@ export default function AdminServicesPage() {
   useEffect(() => { loadServices(); }, []);
 
   const loadServices = async () => {
-    const res = await fetch('/api/services');
+    const res = await fetch('/api/services', { cache: 'no-store' });
     const data = await res.json();
     setServices(data);
     setLoading(false);

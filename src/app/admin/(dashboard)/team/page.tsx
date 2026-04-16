@@ -15,7 +15,7 @@ export default function AdminTeamPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { load(); }, []);
-  const load = async () => { const r = await fetch('/api/team'); setItems(await r.json()); setLoading(false); };
+  const load = async () => { const r = await fetch('/api/team', { cache: 'no-store' }); setItems(await r.json()); setLoading(false); };
   const handleSave = async () => {
     if (!editing) return;
     const initials = editing.initials || (editing.name ? editing.name.split(' ').map((w: string) => w[0]).join('').toUpperCase().slice(0, 2) : '');

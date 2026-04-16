@@ -1,17 +1,17 @@
-import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
+import { jsonResponse } from '@/lib/api-utils';
 
 export async function GET() {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ authenticated: false }, { status: 401 });
+      return jsonResponse({ authenticated: false }, 401);
     }
-    return NextResponse.json({
+    return jsonResponse({
       authenticated: true,
       user: { email: user.email, name: user.name, role: user.role },
     });
   } catch {
-    return NextResponse.json({ authenticated: false }, { status: 401 });
+    return jsonResponse({ authenticated: false }, 401);
   }
 }

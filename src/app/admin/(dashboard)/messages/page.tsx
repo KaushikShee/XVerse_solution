@@ -13,7 +13,7 @@ export default function AdminMessagesPage() {
 
   useEffect(() => { load(); }, []);
   const load = async () => {
-    const r = await fetch('/api/contact');
+    const r = await fetch('/api/contact', { cache: 'no-store' });
     setMessages(await r.json());
     setLoading(false);
   };

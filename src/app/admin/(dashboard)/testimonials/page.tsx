@@ -15,7 +15,7 @@ export default function AdminTestimonialsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { load(); }, []);
-  const load = async () => { const r = await fetch('/api/testimonials'); setItems(await r.json()); setLoading(false); };
+  const load = async () => { const r = await fetch('/api/testimonials', { cache: 'no-store' }); setItems(await r.json()); setLoading(false); };
   const handleSave = async () => {
     if (!editing) return;
     const initials = editing.avatarInitials || (editing.clientName ? editing.clientName.split(' ').map((w: string) => w[0]).join('').toUpperCase().slice(0, 2) : '');

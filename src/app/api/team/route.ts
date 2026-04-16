@@ -1,20 +1,20 @@
-import { NextResponse } from 'next/server';
 import { readDbAsync, writeDbAsync, generateId } from '@/lib/db';
 import { isAuthenticated } from '@/lib/auth';
+import { jsonResponse } from '@/lib/api-utils';
 
 export async function GET() {
   try {
     const db = await readDbAsync();
-    return NextResponse.json(db.teamMembers.sort((a, b) => a.order - b.order));
+    return jsonResponse(db.teamMembers.sort((a, b) => a.order - b.order));
   } catch (error) {
     console.error('Error:', error);
-    return NextResponse.json({ error: 'Failed to fetch' }, { status: 500 });
+    return jsonResponse({ error: 'Failed to fetch' }, 500);
   }
 }
 
 export async function POST(request: Request) {
   try {
-    if (!(await isAuthenticated())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!(await isAuthenticated())) return jsonResponse({ error: 'Unauthorized' }, 401);
     const body = await request.json();
     const db = await readDbAsync();
     const member = {
@@ -34,41 +34,41 @@ export async function POST(request: Request) {
     };
     db.teamMembers.push(member);
     await writeDbAsync(db);
-    return NextResponse.json(member, { status: 201 });
+    return jsonResponse(member, 201);
   } catch (error) {
     console.error('Error:', error);
-    return NextResponse.json({ error: 'Failed to create' }, { status: 500 });
+    return jsonResponse({ error: 'Failed to create' }, 500);
   }
 }
 
 export async function PUT(request: Request) {
   try {
-    if (!(await isAuthenticated())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!(await isAuthenticated())) return jsonResponse({ error: 'Unauthorized' }, 401);
     const body = await request.json();
     const db = await readDbAsync();
     const index = db.teamMembers.findIndex(m => m.id === body.id);
-    if (index === -1) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    if (index === -1) return jsonResponse({ error: 'Not found' }, 404);
     db.teamMembers[index] = { ...db.teamMembers[index], ...body, updatedAt: new Date().toISOString() };
     await writeDbAsync(db);
-    return NextResponse.json(db.teamMembers[index]);
+    return jsonResponse(db.teamMembers[index]);
   } catch (error) {
     console.error('Error:', error);
-    return NextResponse.json({ error: 'Failed to update' }, { status: 500 });
+    return jsonResponse({ error: 'Failed to update' }, 500);
   }
 }
 
 export async function DELETE(request: Request) {
   try {
-    if (!(await isAuthenticated())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!(await isAuthenticated())) return jsonResponse({ error: 'Unauthorized' }, 401);
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
-    if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
+    if (!id) return jsonResponse({ error: 'ID required' }, 400);
     const db = await readDbAsync();
     db.teamMembers = db.teamMembers.filter(m => m.id !== id);
     await writeDbAsync(db);
-    return NextResponse.json({ success: true });
+    return jsonResponse({ success: true });
   } catch (error) {
     console.error('Error:', error);
-    return NextResponse.json({ error: 'Failed to delete' }, { status: 500 });
+    return jsonResponse({ error: 'Failed to delete' }, 500);
   }
 }

@@ -21,12 +21,12 @@ export default function AdminDashboard() {
   const loadStats = async () => {
     try {
       const [services, projects, team, testimonials, blog, messages] = await Promise.all([
-        fetch('/api/services').then(r => r.json()),
-        fetch('/api/projects').then(r => r.json()),
-        fetch('/api/team').then(r => r.json()),
-        fetch('/api/testimonials').then(r => r.json()),
-        fetch('/api/blog').then(r => r.json()),
-        fetch('/api/contact').then(r => r.json()),
+        fetch('/api/services', { cache: 'no-store' }).then(r => r.json()),
+        fetch('/api/projects', { cache: 'no-store' }).then(r => r.json()),
+        fetch('/api/team', { cache: 'no-store' }).then(r => r.json()),
+        fetch('/api/testimonials', { cache: 'no-store' }).then(r => r.json()),
+        fetch('/api/blog', { cache: 'no-store' }).then(r => r.json()),
+        fetch('/api/contact', { cache: 'no-store' }).then(r => r.json()),
       ]);
       setStats({
         services: services.length || 0,

@@ -14,7 +14,7 @@ export default function AdminBlogPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { load(); }, []);
-  const load = async () => { const r = await fetch('/api/blog'); setItems(await r.json()); setLoading(false); };
+  const load = async () => { const r = await fetch('/api/blog', { cache: 'no-store' }); setItems(await r.json()); setLoading(false); };
   const handleSave = async () => {
     if (!editing) return;
     const slug = editing.slug || editing.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || '';

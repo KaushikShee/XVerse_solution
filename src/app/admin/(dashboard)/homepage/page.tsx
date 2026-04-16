@@ -11,7 +11,7 @@ export default function AdminHomepagePage() {
   useEffect(() => { load(); }, []);
 
   const load = async () => {
-    const r = await fetch('/api/homepage');
+    const r = await fetch('/api/homepage', { cache: 'no-store' });
     setContent(await r.json());
     setLoading(false);
   };
