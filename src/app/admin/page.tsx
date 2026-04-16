@@ -131,9 +131,7 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.75rem', color: 'var(--wa-text-muted)' }}>
-          Default: admin@xverse.com / admin123
-        </p>
+
       </div>
     </div>
   );
