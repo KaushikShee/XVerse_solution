@@ -44,10 +44,9 @@ export default function Header({ companyName = 'XVerse Solutions' }: HeaderProps
         <div className="wa-nav-container">
           <Link href="/" className="wa-nav-brand">
             <div className="wa-logo-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 5L19 19" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+                <path d="M19 5L5 19" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeOpacity="0.85"/>
               </svg>
             </div>
             <span className="wa-site-title">{companyName}</span>
@@ -88,9 +87,8 @@ export default function Header({ companyName = 'XVerse Solutions' }: HeaderProps
           <div className="wa-nav-brand" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <div className="wa-logo-icon" style={{ width: 36, height: 36, background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M5 5L19 19" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+                <path d="M19 5L5 19" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeOpacity="0.85"/>
               </svg>
             </div>
             <span style={{ fontWeight: 700, color: '#f8fafc' }}>{companyName}</span>
