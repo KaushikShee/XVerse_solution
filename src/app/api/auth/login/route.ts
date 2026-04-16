@@ -1,34 +1,24 @@
 import { NextResponse } from 'next/server';
-import { readDbAsync } from '@/lib/db';
-import { verifyPassword, generateToken, ensureAdminExists } from '@/lib/auth';
+import { verifyLogin, generateToken } from '@/lib/auth';
 
 export async function POST(request: Request) {
   try {
-    await ensureAdminExists();
-
     const { email, password } = await request.json();
 
     if (!email || !password) {
       return NextResponse.json({ error: 'Email and password required' }, { status: 400 });
     }
 
-    const db = await readDbAsync();
-    const user = db.users.find(u => u.email === email);
-
-    if (!user) {
-      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
-    }
-
-    const valid = await verifyPassword(password, user.passwordHash);
+    const valid = await verifyLogin(email, password);
     if (!valid) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
-    const token = generateToken(user.id, user.email);
+    const token = generateToken(email);
 
     const response = NextResponse.json({
       success: true,
-      user: { id: user.id, email: user.email, name: user.name, role: user.role },
+      user: { email, name: 'Admin', role: 'admin' },
     });
 
     response.cookies.set('xverse_admin_token', token, {

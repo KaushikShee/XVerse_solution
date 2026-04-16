@@ -9,7 +9,7 @@ export async function GET() {
     }
     return NextResponse.json({
       authenticated: true,
-      user: { id: user.id, email: user.email, name: user.name, role: user.role },
+      user: { email: user.email, name: user.name, role: user.role },
     });
   } catch {
     return NextResponse.json({ authenticated: false }, { status: 401 });

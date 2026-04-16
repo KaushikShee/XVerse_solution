@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { put, list, del } from '@vercel/blob';
+import { put, list } from '@vercel/blob';
 
 const DB_PATH = path.join(process.cwd(), 'data', 'db.json');
 const BLOB_FILENAME = 'xverse-db.json';
@@ -485,11 +485,25 @@ function localWrite(data: Database): void {
 
 // --- Vercel Blob (Production) ---
 
+// Cached blob URL to avoid repeated list() calls within same request
+let cachedBlobUrl: string | null = null;
+
 async function blobRead(): Promise<Database> {
   try {
+    // Try cached URL first (same request optimization)
+    if (cachedBlobUrl) {
+      const res = await fetch(cachedBlobUrl, { cache: 'no-store' });
+      if (res.ok) {
+        return await res.json() as Database;
+      }
+      // URL might be stale, clear and fall through
+      cachedBlobUrl = null;
+    }
+
     const { blobs } = await list({ prefix: BLOB_FILENAME });
     if (blobs.length > 0) {
-      const res = await fetch(blobs[0].url);
+      cachedBlobUrl = blobs[0].url;
+      const res = await fetch(blobs[0].url, { cache: 'no-store' });
       if (res.ok) {
         return await res.json() as Database;
       }
@@ -502,83 +516,67 @@ async function blobRead(): Promise<Database> {
 
 async function blobWrite(data: Database): Promise<void> {
   try {
-    // Delete old blobs with this name
-    const { blobs } = await list({ prefix: BLOB_FILENAME });
-    for (const blob of blobs) {
-      await del(blob.url);
-    }
-    // Write new blob
-    await put(BLOB_FILENAME, JSON.stringify(data), {
+    // Overwrite directly — put with addRandomSuffix:false replaces existing
+    const blob = await put(BLOB_FILENAME, JSON.stringify(data), {
       access: 'public',
       addRandomSuffix: false,
     });
+    cachedBlobUrl = blob.url;
+    console.log('Blob write success:', blob.url);
   } catch (e) {
     console.error('Blob write failed:', e);
+    throw e; // Propagate error so callers know write failed
   }
 }
 
 // =============================================
-// Public API (Sync for local, Async for blob)
+// Public API
 // =============================================
 
 /**
- * Read database — works synchronously for local dev,
- * uses cached data + async refresh for Vercel.
+ * Read database - sync version for backward compat.
+ * On Vercel this returns default data (use readDbAsync instead).
  */
 export function readDb(): Database {
   if (!IS_VERCEL) {
     return localRead();
   }
-  // On Vercel: return cache or default (async read happens via readDbAsync)
-  return cachedDb || getDefaultData();
+  return getDefaultData();
 }
 
 /**
- * Async read — checks in-memory cache first (for within-request consistency),
- * then fetches from Vercel Blob if cache is empty.
+ * Read database - async version. Always reads fresh data from blob.
  */
 export async function readDbAsync(): Promise<Database> {
   if (!IS_VERCEL) {
     return localRead();
   }
-  // Use cache if available (critical for within-request consistency,
-  // e.g. ensureAdminExists writes, then login reads)
-  if (cachedDb) {
-    return cachedDb;
-  }
-  const data = await blobRead();
-  cachedDb = data;
-  return data;
+  return await blobRead();
 }
 
 /**
- * Write database — sync for local, async for Vercel Blob.
+ * Write database - sync version for backward compat.
  */
 export function writeDb(data: Database): void {
   if (!IS_VERCEL) {
     localWrite(data);
     return;
   }
-  // On Vercel: update cache immediately + async write to blob
-  cachedDb = data;
   blobWrite(data).catch(e => console.error('Async blob write failed:', e));
 }
 
 /**
- * Async write — use this in API routes to ensure data is persisted.
+ * Write database - async version. Ensures data is persisted before returning.
  */
 export async function writeDbAsync(data: Database): Promise<void> {
   if (!IS_VERCEL) {
     localWrite(data);
     return;
   }
-  cachedDb = data;
   await blobWrite(data);
 }
-
-// In-memory cache for Vercel
-let cachedDb: Database | null = null;
 
 export function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
 }
+
