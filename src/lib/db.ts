@@ -485,17 +485,26 @@ function localWrite(data: Database): void {
 
 // --- Vercel Blob (Production) ---
 
-// Cached blob URL to avoid repeated list() calls within same request
-let cachedBlobUrl: string | null = null;
 const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || '';
 
+// In-memory cache: stores data written in current request for immediate read-back
+let lastWrittenData: Database | null = null;
+let lastWriteTime = 0;
+
 async function blobRead(): Promise<Database> {
+  // If we wrote recently (within same request, ~10s window), return cached write
+  if (lastWrittenData && (Date.now() - lastWriteTime) < 10000) {
+    const data = lastWrittenData;
+    return data;
+  }
+
   try {
     const { blobs } = await list({ prefix: BLOB_FILENAME, token: BLOB_TOKEN });
     if (blobs.length > 0) {
-      // For private stores, use downloadUrl if available, else url with auth header
       const blobUrl = (blobs[0] as any).downloadUrl || blobs[0].url;
-      const res = await fetch(blobUrl, {
+      // Add cache-busting timestamp to bypass Vercel CDN cache
+      const bustUrl = blobUrl + (blobUrl.includes('?') ? '&' : '?') + '_t=' + Date.now();
+      const res = await fetch(bustUrl, {
         cache: 'no-store',
         headers: { Authorization: `Bearer ${BLOB_TOKEN}` },
       });
@@ -512,13 +521,15 @@ async function blobRead(): Promise<Database> {
 
 async function blobWrite(data: Database): Promise<void> {
   try {
-    const blob = await put(BLOB_FILENAME, JSON.stringify(data), {
+    await put(BLOB_FILENAME, JSON.stringify(data), {
       access: 'private',
       addRandomSuffix: false,
       allowOverwrite: true,
       token: BLOB_TOKEN,
     } as any);
-    cachedBlobUrl = blob.url;
+    // Cache written data for immediate read-back
+    lastWrittenData = data;
+    lastWriteTime = Date.now();
   } catch (e) {
     console.error('Blob write failed:', e);
     throw e;
@@ -541,7 +552,7 @@ export function readDb(): Database {
 }
 
 /**
- * Read database - async version. Always reads fresh data from blob.
+ * Read database - async version. Reads fresh data from blob (with CDN cache busting).
  */
 export async function readDbAsync(): Promise<Database> {
   if (!IS_VERCEL) {
