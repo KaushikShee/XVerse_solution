@@ -491,28 +491,18 @@ const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || '';
 
 async function blobRead(): Promise<Database> {
   try {
-    // Try cached URL first (same request optimization)
-    if (cachedBlobUrl) {
-      const res = await fetch(cachedBlobUrl, {
-        cache: 'no-store',
-        headers: { Authorization: `Bearer ${BLOB_TOKEN}` },
-      });
-      if (res.ok) {
-        return await res.json() as Database;
-      }
-      cachedBlobUrl = null;
-    }
-
-    const { blobs } = await list({ prefix: BLOB_FILENAME });
+    const { blobs } = await list({ prefix: BLOB_FILENAME, token: BLOB_TOKEN });
     if (blobs.length > 0) {
-      cachedBlobUrl = blobs[0].url;
-      const res = await fetch(blobs[0].url, {
+      // For private stores, use downloadUrl if available, else url with auth header
+      const blobUrl = (blobs[0] as any).downloadUrl || blobs[0].url;
+      const res = await fetch(blobUrl, {
         cache: 'no-store',
         headers: { Authorization: `Bearer ${BLOB_TOKEN}` },
       });
       if (res.ok) {
         return await res.json() as Database;
       }
+      console.error('Blob fetch failed:', res.status, await res.text());
     }
   } catch (e) {
     console.error('Blob read failed:', e);
@@ -525,10 +515,10 @@ async function blobWrite(data: Database): Promise<void> {
     const blob = await put(BLOB_FILENAME, JSON.stringify(data), {
       access: 'private',
       addRandomSuffix: false,
+      allowOverwrite: true,
       token: BLOB_TOKEN,
     } as any);
     cachedBlobUrl = blob.url;
-    console.log('Blob write success:', blob.url);
   } catch (e) {
     console.error('Blob write failed:', e);
     throw e;
