@@ -820,21 +820,18 @@ p {
 
   .wa-project-card {
     aspect-ratio: unset;
-    display: flex;
-    flex-direction: column;
   }
 
   .wa-project-image-wrapper {
-    height: 180px;
-    flex-shrink: 0;
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
   }
 
   .wa-project-overlay {
     position: relative;
-    inset: unset;
-    background: linear-gradient(180deg, rgba(10, 10, 15, 0.95) 0%, rgba(10, 10, 15, 1) 100%);
-    justify-content: flex-start;
-    padding: 1.25rem;
+    min-height: 280px;
   }
 }
 
