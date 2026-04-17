@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import RevealOnScroll from '@/components/RevealOnScroll';
@@ -126,8 +127,8 @@ export default function ContactPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                   <div className="admin-card" style={{ padding: '2rem' }}>
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-                      <div style={{ width: 45, height: 45, background: 'var(--wa-gradient-primary)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0 }}>
-                        📧
+                      <div style={{ width: 45, height: 45, background: 'var(--wa-gradient-primary)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <Mail size={20} color="white" />
                       </div>
                       <div>
                         <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.25rem' }}>Email</h3>
@@ -138,8 +139,8 @@ export default function ContactPage() {
 
                   <div className="admin-card" style={{ padding: '2rem' }}>
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-                      <div style={{ width: 45, height: 45, background: 'var(--wa-gradient-primary)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0 }}>
-                        📞
+                      <div style={{ width: 45, height: 45, background: 'var(--wa-gradient-primary)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <Phone size={20} color="white" />
                       </div>
                       <div>
                         <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.25rem' }}>Phone</h3>
@@ -150,8 +151,8 @@ export default function ContactPage() {
 
                   <div className="admin-card" style={{ padding: '2rem' }}>
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-                      <div style={{ width: 45, height: 45, background: 'var(--wa-gradient-primary)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0 }}>
-                        📍
+                      <div style={{ width: 45, height: 45, background: 'var(--wa-gradient-primary)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <MapPin size={20} color="white" />
                       </div>
                       <div>
                         <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.25rem' }}>Location</h3>
@@ -162,8 +163,8 @@ export default function ContactPage() {
 
                   <div className="admin-card" style={{ padding: '2rem' }}>
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-                      <div style={{ width: 45, height: 45, background: 'var(--wa-gradient-primary)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0 }}>
-                        🕐
+                      <div style={{ width: 45, height: 45, background: 'var(--wa-gradient-primary)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <Clock size={20} color="white" />
                       </div>
                       <div>
                         <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.25rem' }}>Business Hours</h3>
