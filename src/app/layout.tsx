@@ -58,7 +58,7 @@ const organizationSchema = {
   url: siteUrl,
   logo: `${siteUrl}/icon.png`,
   email: 'hello@xverse.solutions',
-  telephone: '+91-9064158621',
+  telephone: '+91 9876543210',
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Kolkata',

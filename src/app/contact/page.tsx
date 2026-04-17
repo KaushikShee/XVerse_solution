@@ -144,7 +144,7 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.25rem' }}>Phone</h3>
-                        <p style={{ color: 'var(--wa-text-secondary)' }}>+91 9064158621</p>
+                        <p style={{ color: 'var(--wa-text-secondary)' }}>+91 9876543210</p>
                       </div>
                     </div>
                   </div>

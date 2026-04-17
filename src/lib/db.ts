@@ -424,7 +424,7 @@ function getDefaultData(): Database {
       companyName: 'XVerse Solutions',
       companyTagline: 'Crafting exceptional digital experiences since 2020. We turn complex ideas into elegant, scalable solutions.',
       companyEmail: 'hello@xverse.solutions',
-      companyPhone: '+91 9064158621',
+      companyPhone: '+91 9876543210',
       companyAddress: 'Kolkata, India',
       copyrightText: '© 2024 XVerse Solutions. All rights reserved.',
       socialLinkedin: '#',

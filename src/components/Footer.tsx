@@ -10,7 +10,7 @@ export default function Footer({ content }: FooterProps) {
     companyName: content?.companyName || 'XVerse Solutions',
     companyTagline: content?.companyTagline || 'Crafting exceptional digital experiences since 2020.',
     companyEmail: content?.companyEmail || 'hello@xverse.solutions',
-    companyPhone: content?.companyPhone || '+91 9064158621',
+    companyPhone: content?.companyPhone || '+91 9876543210',
     companyAddress: content?.companyAddress || 'Kolkata, India',
     copyrightText: (content?.copyrightText || '© 2026 XVerse Solutions. All rights reserved.').replace(/\b20\d{2}\b/, '2026'),
     socialLinkedin: content?.socialLinkedin || '#',
