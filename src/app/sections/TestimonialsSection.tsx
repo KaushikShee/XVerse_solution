@@ -46,7 +46,7 @@ export default function TestimonialsSection({ content, testimonials }: Props) {
                           borderRadius: '50%',
                         }}
                       >
-                        {testimonial.avatarInitials}
+                        {testimonial.clientName.split(' ').filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('')}
                       </div>
                     </div>
                     <div>
