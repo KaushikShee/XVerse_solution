@@ -439,6 +439,8 @@ p {
   position: relative;
   background: var(--wa-gradient-hero);
   overflow: hidden;
+  padding-top: 5rem;
+  box-sizing: border-box;
 }
 
 .wa-hero::before {
