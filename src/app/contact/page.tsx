@@ -168,7 +168,7 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.25rem' }}>Business Hours</h3>
-                        <p style={{ color: 'var(--wa-text-secondary)' }}>Mon - Fri: 9:00 AM - 6:00 PM PST</p>
+                        <p style={{ color: 'var(--wa-text-secondary)' }}>Mon - Fri: 9:30 AM - 7:30 PM IST</p>
                       </div>
                     </div>
                   </div>
