@@ -812,6 +812,32 @@ p {
   color: var(--wa-text-secondary);
 }
 
+@media (max-width: 640px) {
+  .wa-projects-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .wa-project-card {
+    aspect-ratio: unset;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .wa-project-image-wrapper {
+    height: 180px;
+    flex-shrink: 0;
+  }
+
+  .wa-project-overlay {
+    position: relative;
+    inset: unset;
+    background: linear-gradient(180deg, rgba(10, 10, 15, 0.95) 0%, rgba(10, 10, 15, 1) 100%);
+    justify-content: flex-start;
+    padding: 1.25rem;
+  }
+}
+
 /* ========================================
    Stats Section
 ======================================== */
